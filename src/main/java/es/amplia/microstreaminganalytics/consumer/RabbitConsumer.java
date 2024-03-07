@@ -1,7 +1,7 @@
 package es.amplia.microstreaminganalytics.consumer;
 
 import es.amplia.microstreaminganalytics.config.PublisherConfig;
-import es.amplia.microstreaminganalytics.model.CustomMessage;
+import es.amplia.microstreaminganalytics.dto.MessageDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,8 @@ public class RabbitConsumer {
     @Autowired
     PublisherConfig publisherConfig;
     @RabbitListener(queues = {"#{publisherConfig.queue}"})
-    public void receiver(@Payload CustomMessage message) {
-        log.info("Received message {}", message);
+    public void receiver(@Payload MessageDTO message) {
+        log.info("Received message with ID: {}", message.getId());
         makeSlow();
     }
 

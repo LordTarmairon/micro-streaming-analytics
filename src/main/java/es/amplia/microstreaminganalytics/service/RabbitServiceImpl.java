@@ -1,7 +1,7 @@
 package es.amplia.microstreaminganalytics.service;
 
 import es.amplia.microstreaminganalytics.interfaces.IRabbitService;
-import es.amplia.microstreaminganalytics.model.CustomMessage;
+import es.amplia.microstreaminganalytics.dto.MessageDTO;
 import es.amplia.microstreaminganalytics.publisher.RabbitPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,8 @@ public class RabbitServiceImpl implements IRabbitService {
     private RabbitPublisher rabbitPublisher;
 
     @Override
-    public void sendToRabbit(CustomMessage message) {
-        log.info("Message '{}' will be send...", message);
+    public void sendToRabbit(MessageDTO message) {
+        log.info("Message with ID '{}' will be send...", message.getId());
         rabbitPublisher.send(message);
     }
 }

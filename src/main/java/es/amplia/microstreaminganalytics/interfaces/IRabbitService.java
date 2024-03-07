@@ -1,7 +1,7 @@
 package es.amplia.microstreaminganalytics.interfaces;
 
-import es.amplia.microstreaminganalytics.model.CustomMessage;
+import es.amplia.microstreaminganalytics.dto.MessageDTO;
 
 public interface IRabbitService {
-    void sendToRabbit(CustomMessage message);
+    void sendToRabbit(MessageDTO message);
 }

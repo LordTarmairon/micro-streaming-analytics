@@ -14,5 +14,18 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ampliadb
+      MONGO_INITDB_ROOT_PASSWORD: ampliadbtask123.
+      MONGO_INITDB_DATABASE: admin
 volumes:
   rabbitmq_data:
+  mongodb_data:
+

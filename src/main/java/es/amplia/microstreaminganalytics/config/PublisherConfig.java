@@ -31,6 +31,8 @@ public class PublisherConfig {
 
     private String routingKey;
 
+    private int sleepingTime;
+
     @Bean
     public Queue queue() {
         return new Queue(queue, true);

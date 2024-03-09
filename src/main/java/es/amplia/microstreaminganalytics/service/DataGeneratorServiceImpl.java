@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -20,7 +21,6 @@ public class DataGeneratorServiceImpl implements IDataGeneratorService {
     BatchProperties batchProperties;
     @Autowired
     IDataGenerator iWeatherDataGenerator;
-
     @Override
     public MessageDTO generateNewMessageDTO () {
         MessageDTO messageDTO;
@@ -29,7 +29,7 @@ public class DataGeneratorServiceImpl implements IDataGeneratorService {
                     (long)(Math.random() * Long.MAX_VALUE),
                     batchProperties.getVersion(),
                     new Date(),
-                    "TEST_ENTITY",
+                    batchProperties.getEntityNames().get(new Random().nextInt(batchProperties.getEntityNames().size())),
                     new DataDTO(
                             iWeatherDataGenerator.generateTemperature(),
                             iWeatherDataGenerator.generateHumidity(),

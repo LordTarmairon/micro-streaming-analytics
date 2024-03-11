@@ -18,9 +18,9 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "statistics")
-public class Statistics {
+    public class Statistics {
     @Id
-    private long id;
+    private Long id;
     private EntityName entityName;
     private Date date;
     private double mean;
@@ -32,7 +32,7 @@ public class Statistics {
     private double minValue;
     private int evaluatedData;
 
-    public Statistics(long id, Date date) {
+    public Statistics(Long id, Date date) {
         this.id = id;
         this.date = date;
     }

@@ -24,7 +24,7 @@ public class MessageDTOController {
 
         messageDTOS = iMessageDTOService.getAllMessageDTO();
         if(messageDTOS.isEmpty()){
-            log.error("An error occurred getting all messageDTOs, List size: {}", messageDTOS.size());
+            log.error("An error occurred getting all messageDTOs or not messageDTOs was generated yet, List size: {}", messageDTOS.size());
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(messageDTOS);

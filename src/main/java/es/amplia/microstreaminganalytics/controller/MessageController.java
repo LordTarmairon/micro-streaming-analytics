@@ -23,8 +23,8 @@ public class MessageController {
     @Autowired
     private IDataGeneratorService iDataGeneratorService;
 
-    @PostMapping("/test")
-    public void testSendMessage() {
+    @PostMapping("/sendMessage")
+    public void sendMessage() {
         iRabbitService.sendToRabbit(iDataGeneratorService.generateNewMessageDTO());
     }
 

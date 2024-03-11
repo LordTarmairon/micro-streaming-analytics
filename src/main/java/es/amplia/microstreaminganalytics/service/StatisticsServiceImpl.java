@@ -29,6 +29,10 @@ public class StatisticsServiceImpl implements IStatisticsService {
     @Override
     public Statistics getStatisticsByID(Long id) {
         log.info("Finding Statistics by ID: {}",id);
+        Optional<Statistics> test = statisticsRepository.findById(id);
+        System.out.println(test.isEmpty());
+        System.out.println(test.get().getEntityName());
+
         return statisticsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("getStatisticsByID, it gets an error finding a Statistics by ID: "+ id));
     }
@@ -42,25 +46,44 @@ public class StatisticsServiceImpl implements IStatisticsService {
         output = statisticsRepository.findByEntityName(entity);
 
         if(output.isEmpty() || output == null) {
-            throw new EntityNotFoundException("getStatisticsByEntity, it gets an error finding a Statistics by ID: "+ entity);
+            throw new EntityNotFoundException("getStatisticsByEntity, it gets an error finding a Statistics by EntityName: "+ entity);
         }
 
         return output;
     }
     @Override
     public List<Statistics> getAllStatistics() {
-        List<Statistics> output;
+        List<Statistics> output = new ArrayList<>();
 
         log.info("Getting all Statistics");
-        output = statisticsRepository.findAll();
+
+        try {
+            output = statisticsRepository.findAll();
+
+        } catch (Exception e) {
+            log.error("getAllStatistics, it gets an error getting all Statistics");
+        }
 
         if(output.isEmpty() || output == null) {
-            throw new EntityNotFoundException("getAllStatistics, it gets an error getting all Statistics");
+            throw new EntityNotFoundException("getAllStatistics, it gets an error getting all Statistics and Statistics is empty or null");
         }
 
         return output;
     }
 
+    @Override
+    public List<Statistics> getStatisticsByDate(Date date) {
+        List<Statistics> output;
+
+        log.info("Getting Statistics by date");
+        output = statisticsRepository.findByDate(date);
+
+        if(output.isEmpty() || output == null) {
+            throw new EntityNotFoundException("getStatisticsByDate, it gets an error getting all Statistics");
+        }
+
+        return output;
+    }
     @Override
     @Transactional
     public Statistics saveStatistics(Statistics statistics) {

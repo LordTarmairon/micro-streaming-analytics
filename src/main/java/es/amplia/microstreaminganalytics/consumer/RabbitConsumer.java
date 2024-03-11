@@ -3,6 +3,7 @@ package es.amplia.microstreaminganalytics.consumer;
 import es.amplia.microstreaminganalytics.config.PublisherConfig;
 import es.amplia.microstreaminganalytics.dto.MessageDTO;
 import es.amplia.microstreaminganalytics.interfaces.IMessageDTOService;
+import es.amplia.microstreaminganalytics.interfaces.IStatisticsService;
 import es.amplia.microstreaminganalytics.model.Statistics;
 import es.amplia.microstreaminganalytics.util.EntityName;
 import es.amplia.microstreaminganalytics.util.Utilities;
@@ -13,6 +14,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -22,6 +24,9 @@ public class RabbitConsumer {
 
     @Autowired
     IMessageDTOService iMessageDTOService;
+
+    @Autowired
+    IStatisticsService iStatisticsService;
     private Map<EntityName, List<Double>> weatherDataMap;
 
     public RabbitConsumer() {
@@ -42,43 +47,22 @@ public class RabbitConsumer {
         weatherDataMap.get(EntityName.WINDSPEED).add(message.getData().getWindSpeed());
 
         iMessageDTOService.saveProduct(message);
-
+        this.getStatisticsUntilNow();
         makeSlow();
     }
 
     // This function is going to populate the Statistics class with the parameter it gets.
-    public Statistics calculateStatistics(EntityName entityName) {
-        Statistics statistics = new Statistics();
-
-        statistics.setDate(new Date());
-
+    public void getStatisticsUntilNow () {
         try {
-            switch (entityName) {
-                case EntityName.TEMPERATURE:
-                    statistics.setEntityName(EntityName.TEMPERATURE);
-                    statistics.calculateStatistics(Utilities.convertToArray(weatherDataMap.get(EntityName.TEMPERATURE)));
-                    break;
-                case EntityName.HUMIDITY:
-                    statistics.setEntityName(EntityName.HUMIDITY);
-                    statistics.calculateStatistics(Utilities.convertToArray(weatherDataMap.get(EntityName.HUMIDITY)));
-                    break;
-                case EntityName.PRESSURE:
-                    statistics.setEntityName(EntityName.PRESSURE);
-                    statistics.calculateStatistics(Utilities.convertToArray(weatherDataMap.get(EntityName.PRESSURE)));
-                    break;
-                case EntityName.WINDSPEED:
-                    statistics.setEntityName(EntityName.WINDSPEED);
-                    statistics.calculateStatistics(Utilities.convertToArray(weatherDataMap.get(EntityName.WINDSPEED)));
-                    break;
-                default:
-                    throw new IllegalArgumentException("Wrong EntityName");
-            }
+        iStatisticsService.saveStatistics(Utilities.getStatisticsObject(EntityName.TEMPERATURE, weatherDataMap.get(EntityName.TEMPERATURE)));
+        iStatisticsService.saveStatistics(Utilities.getStatisticsObject(EntityName.HUMIDITY, weatherDataMap.get(EntityName.HUMIDITY)));
+        iStatisticsService.saveStatistics(Utilities.getStatisticsObject(EntityName.PRESSURE, weatherDataMap.get(EntityName.PRESSURE)));
+        iStatisticsService.saveStatistics(Utilities.getStatisticsObject(EntityName.WINDSPEED, weatherDataMap.get(EntityName.WINDSPEED)));
 
-        } catch (IllegalArgumentException e) {
-            log.error("Error: {}", e.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("getStatisticsUntilNow, found an error to get Statistics until now. {}", e.getMessage());
         }
-
-        return statistics;
     }
 
     // This function just make the Thread await for ? seconds

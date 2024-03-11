@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/openjdk/jdk:17-ubuntu as base
+FROM mcr.microsoft.com/openjdk/jdk:21-ubuntu as base
 
 EXPOSE 8080
 
 ENV AR_KEY=8f991b285e80f354ed2f2665867e9e4d
 
-ADD target/micro-streaming-analytics-0.0.1.jar
+ADD "./micro-streaming-analytics-0.0.1.jar" app.jar
 
-ENTRYPOINT ["java", "-jar", "micro-streaming-analytics-0.0.1.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
